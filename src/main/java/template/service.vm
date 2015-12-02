@@ -1,0 +1,33 @@
+package ${table.packageName}.service;
+
+import java.util.Map;
+import java.util.List;
+
+import blade.plugin.sql2o.Page;
+import blade.plugin.sql2o.WhereParam;
+
+import ${table.packageName}.model.${table.className};
+
+public interface ${table.className}Service {
+	
+	public ${table.className} get${table.className}(${table.getFirstPrimaryKey().fieldType} ${table.getFirstPrimaryKey().fieldName});
+	
+	public ${table.className} get${table.className}(WhereParam where);
+	
+	public List<${table.className}> get${table.className}List(WhereParam where);
+	
+	public Map<String, Object> get${table.className}Map(${table.className} ${table.classNameFirstLower}, ${table.getFirstPrimaryKey().fieldType} ${table.getFirstPrimaryKey().fieldName});
+	
+	public boolean save(#foreach( $tempColumn in $table.columnList )#if(${tempColumn.fieldName}!=${table.getFirstPrimaryKey().fieldName})${tempColumn.fieldType} ${tempColumn.fieldName}#if($velocityCount!=$table.columnList.size()),#end#end #end);
+			
+	public boolean update(${table.getFirstPrimaryKey().fieldType} ${table.getFirstPrimaryKey().fieldName},#foreach( $tempColumn in $table.columnList )#if(${tempColumn.fieldName}!=${table.getFirstPrimaryKey().fieldName})${tempColumn.fieldType} ${tempColumn.fieldName}#if($velocityCount!=$table.columnList.size()),#end#end #end);
+	
+	public boolean delete(${table.getFirstPrimaryKey().fieldType} ${table.getFirstPrimaryKey().fieldName});
+	
+	public List<Map<String, Object>> getList(#foreach( $tempColumn in $table.columnList )#if(${tempColumn.fieldName}!=${table.getFirstPrimaryKey().fieldName})${tempColumn.fieldType} ${tempColumn.fieldName},#end#end String order);
+	
+	public Page<${table.className}> getPageList(#foreach( $tempColumn in $table.columnList )#if(${tempColumn.fieldName}!=${table.getFirstPrimaryKey().fieldName})${tempColumn.fieldType} ${tempColumn.fieldName},#end#end Integer page, Integer pageSize, String order);
+	
+	public Page<Map<String, Object>> getPageMapList(Page<${table.className}> pageEntity);
+	
+}
