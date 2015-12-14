@@ -1,0 +1,56 @@
+package ${table.packageName}.service.impl;
+
+import java.util.List;
+import blade.plugin.sql2o.Model;
+import blade.plugin.sql2o.Page;
+import blade.plugin.sql2o.WhereParam;
+import com.blade.annotation.Component;
+import ${table.packageName}.model.${table.className};
+import ${table.packageName}.service.${table.className}Service;
+
+@Component
+public class ${table.className}ServiceImpl implements ${table.className}Service {
+	
+	private Model<${table.className}> model = Model.create(${table.className}.class);
+	
+	@Override
+	public ${table.className} get${table.className}(${table.getFirstPrimaryKey().fieldType} ${table.getFirstPrimaryKey().fieldName}) {
+		return model.fetchByPk(${table.getFirstPrimaryKey().fieldName});
+	}
+	
+	@Override
+	public ${table.className} get${table.className}(WhereParam where) {
+		if(null != where){
+			return model.select().where(where).fetchOne();
+		}
+		return null;
+	}
+	
+	@Override
+	public List<${table.className}> get${table.className}List(WhereParam where) {
+		if(null != where){
+			return model.select().where(where).fetchList();
+		}
+		return null;
+	}
+	
+	@Override
+	public Page<${table.className}> getPageList(WhereParam where, Integer page, Integer pageSize, String order) {
+		Page<${table.className}> page${table.className} = model.select().where(where).orderBy(order).fetchPage(page, pageSize);
+		return page${table.className};
+	}
+	
+	@Override
+	public boolean save(#foreach($tempColumn in $table.columnList)#if(${tempColumn.fieldName}!=${table.getFirstPrimaryKey().fieldName})${tempColumn.fieldType} ${tempColumn.fieldName}#if($velocityCount!=$table.columnList.size()),#end#end #end) {
+		return false;
+	}
+	
+	@Override
+	public boolean delete(${table.getFirstPrimaryKey().fieldType} ${table.getFirstPrimaryKey().fieldName}) {
+		if(null != ${table.getFirstPrimaryKey().fieldName}){
+			return model.delete().eq("${table.getFirstPrimaryKey().fieldName}", ${table.getFirstPrimaryKey().fieldName}).executeAndCommit() > 0;
+		}
+		return false;
+	}
+		
+}

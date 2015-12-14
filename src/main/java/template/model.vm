@@ -8,7 +8,7 @@ import blade.plugin.sql2o.Table;
 /**
  * ${table.className}对象
  */
-@Table(value="${table.tableName}")
+@Table(value = "${table.tableName}", PK = "${table.pkName}")
 public class ${table.className} implements Serializable {
 
 	private static final long serialVersionUID = 1L;

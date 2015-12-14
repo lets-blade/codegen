@@ -48,9 +48,11 @@ public class CodeGenerator {
 
 				map.put("table", table);
 				
+				System.out.println(table);
+				
 				VelocityInfoOp.generatorCode("model.vm", map, sourcePath + table.getPackagePath() + "/model", table.getClassName() + ".java");
 				VelocityInfoOp.generatorCode("service.vm", map, sourcePath + table.getPackagePath() + "/service", table.getClassName() + "Service.java");
-//				VelocityInfoOp.generatorCode("serviceImpl.vm", map, sourcePath + table.getPackagePath() + "/service/impl", table.getClassName() + "ServiceImpl.java");
+				VelocityInfoOp.generatorCode("serviceimpl.vm", map, sourcePath + table.getPackagePath() + "/service/impl", table.getClassName() + "ServiceImpl.java");
 				
 				logger.info("表：" + table.getTableName() + "成功");
 			}

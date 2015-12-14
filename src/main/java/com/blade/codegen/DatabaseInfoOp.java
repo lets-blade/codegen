@@ -190,7 +190,7 @@ public class DatabaseInfoOp {
 
 				// 添加列到表中
 				table.getColumnList().add(tempColumn);
-
+				
 			}
 
 			// 设置主键列
@@ -202,6 +202,7 @@ public class DatabaseInfoOp {
 						Column coltemp = table.getColumnList().get(i);
 						if (coltemp.getColumnName().equals(rsPrimary.getString("COLUMN_NAME"))) {
 							coltemp.setPrimary(true);
+							table.setPkName(coltemp.getColumnName());
 						}
 					}
 

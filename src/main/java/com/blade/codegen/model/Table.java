@@ -32,10 +32,15 @@ public class Table {
 	private String tableComment;
 
 	/**
+	 * 主键名称
+	 */
+	private String pkName;
+	
+	/**
 	 * 列
 	 */
 	private List<Column> columnList = new ArrayList<Column>();
-
+	
 	/**
 	 * 包名
 	 */
@@ -99,8 +104,7 @@ public class Table {
 	public String getClassName() {
 		if (CodeGenerator.prefix.equals("")) {
 			// 直接输出
-			this.className = StringUtil.getClassUpper(StringUtil
-					.getDomainColumnName(this.tableName));
+			this.className = StringUtil.getClassUpper(StringUtil.getDomainColumnName(this.tableName));
 		} else {
 			// 去除前缀
 			if (this.tableName.startsWith(CodeGenerator.prefix)) {
@@ -158,6 +162,22 @@ public class Table {
 
 	public void setClassNameFirstLower(String classNameFirstLower) {
 		this.classNameFirstLower = classNameFirstLower;
+	}
+
+	public String getPkName() {
+		return pkName;
+	}
+
+	public void setPkName(String pkName) {
+		this.pkName = pkName;
+	}
+
+	@Override
+	public String toString() {
+		return "Table [tableSchem=" + tableSchem + ", tableName=" + tableName
+				+ ", tableComment=" + tableComment + ", pkName = " + this.getPkName() + ", packageName=" + packageName
+				+ ", packagePath=" + packagePath + ", className=" + this.getClassName()
+				+ ", classNameFirstLower=" + this.getClassNameFirstLower() + "]";
 	}
 	
 }
