@@ -13,7 +13,7 @@ public interface ${table.className}Service {
 	
 	public ${table.className} get${table.className}(WhereParam where);
 	
-	public List<${table.className}> get${table.className}List(WhereParam where);
+	public List<${table.className}> get${table.className}List(WhereParam where, String order);
 	
 	public Page<${table.className}> getPageList(WhereParam where, Integer page, Integer pageSize, String order);
 	

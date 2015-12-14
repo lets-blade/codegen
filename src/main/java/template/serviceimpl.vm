@@ -27,9 +27,9 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 	}
 	
 	@Override
-	public List<${table.className}> get${table.className}List(WhereParam where) {
+	public List<${table.className}> get${table.className}List(WhereParam where, String order) {
 		if(null != where){
-			return model.select().where(where).fetchList();
+			return model.select().where(where).orderBy(order).fetchList();
 		}
 		return null;
 	}
