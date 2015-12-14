@@ -12,7 +12,7 @@ public class GetDBInfo {
 	public static void main(String[] args) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String url = "jdbc:mysql://localhost:3306/test";
+			String url = "jdbc:mysql://localhost:3306/film";
 			String user = "root";
 			String pass = "root";
 			String s;

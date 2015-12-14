@@ -117,17 +117,16 @@ public class StringUtil {
 
 	public static String getColumnType(int databaseType) {
 		String colType = "";
-		
+
 		switch (databaseType) {
 		case java.sql.Types.DECIMAL:
 		case java.sql.Types.REAL:
 			colType = "Float";
 			break;
-		
+
 		case java.sql.Types.INTEGER:
 		case java.sql.Types.BIGINT:
 		case java.sql.Types.TINYINT:
-		
 			colType = "Integer";
 			break;
 		case java.sql.Types.VARCHAR:
@@ -136,13 +135,15 @@ public class StringUtil {
 		case java.sql.Types.LONGVARCHAR:
 			colType = "String";
 			break;
-			
+		case java.sql.Types.BIT:
+			colType = "Boolean";
+			break;
 		case java.sql.Types.DATE:
 		case java.sql.Types.TIMESTAMP:
-			colType="Date";
+			colType = "Date";
 			break;
 		default:
-			System.out.println("找不到数据类型："+databaseType);
+			System.out.println("找不到数据类型：" + databaseType);
 			break;
 		}
 
