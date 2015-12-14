@@ -48,7 +48,7 @@ public class CodeGenerator {
 
 				map.put("table", table);
 				
-				System.out.println(table);
+//				System.out.println(table);
 				
 				VelocityInfoOp.generatorCode("model.vm", map, sourcePath + table.getPackagePath() + "/model", table.getClassName() + ".java");
 				VelocityInfoOp.generatorCode("service.vm", map, sourcePath + table.getPackagePath() + "/service", table.getClassName() + "Service.java");
