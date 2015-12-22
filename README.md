@@ -1,8 +1,8 @@
 # codegen
 
-这个项目是基于blade框架的代码生成器，根据数据库生成Java类，生成Model和Service代码。
+This project is based on the blade framework code generator, according to the database to generate Java classes, generating code Model and the Service.
 
-## 使用方法
+## Usage
 
 ```java
 public static void main(String[] args) throws IOException {
@@ -12,7 +12,7 @@ public static void main(String[] args) throws IOException {
 	String password = "root";
 	String classPackage = "com.xxx";
 	String outPath = "E:/";
-	// 表前缀，没有则不设置
+	// Table prefix, no is not set
 	CodeGenerator.prefix = "i_";
 	boolean flag = new CodeGenerator().generator(classDriver, url, username, password, classPackage, outPath);
 	if(flag){
