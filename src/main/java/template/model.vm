@@ -3,7 +3,7 @@ package ${table.packageName}.model;
 
 import java.io.Serializable;
 
-import blade.plugin.sql2o.Table;
+import com.blade.jdbc.annotation.Table;
 
 /**
  * ${table.className}对象

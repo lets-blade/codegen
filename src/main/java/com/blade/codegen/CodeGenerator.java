@@ -8,14 +8,15 @@ import java.util.Map;
 import com.blade.codegen.model.Database;
 import com.blade.codegen.model.Table;
 
-import blade.kit.log.Logger;
+import blade.kit.logging.Logger;
+import blade.kit.logging.LoggerFactory;
 
 /**
  * 代码生成类
  */
 public class CodeGenerator {
 
-	private Logger logger = Logger.getLogger(CodeGenerator.class);
+	private Logger logger = LoggerFactory.getLogger(CodeGenerator.class);
 	
 	//是否去掉模块前面的编号
 	public static String prefix = "";
