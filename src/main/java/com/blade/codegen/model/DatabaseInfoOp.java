@@ -1,4 +1,4 @@
-package com.blade.codegen;
+package com.blade.codegen.model;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

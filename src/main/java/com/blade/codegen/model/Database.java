@@ -5,9 +5,6 @@ import java.util.List;
 
 /**
  * 数据库实体
- * @ClassName: DatabaseBean 
- * @author AndrewWen
- * @date 2013-1-15 下午12:31:10
  */
 public class Database {
 	/**

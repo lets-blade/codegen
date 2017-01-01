@@ -1,4 +1,4 @@
-package com.blade.codegen;
+package com.blade.codegen.model;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,26 +20,25 @@ import org.apache.velocity.app.VelocityEngine;
  */
 public class VelocityInfoOp {
 
-	public static void generatorCode(String templateFile, Map<String, Object> contextMap, String path, String fileName) {
-		//设置模板载入路径
-		VelocityContext context = new VelocityContext();
+	//设置模板载入路径
+	static VelocityContext context = new VelocityContext();
 
-		//获取模板引擎
-		VelocityEngine ve = new VelocityEngine();
+	//获取模板引擎
+	static VelocityEngine ve = new VelocityEngine();
 
+	static {
 		//模板文件所在的路径
 		String vPath = VelocityInfoOp.class.getResource("/template").getPath();
-
 		//设置参数
 		ve.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, vPath);
-
 		//处理中文问题
 		ve.setProperty(Velocity.INPUT_ENCODING, "UTF-8");
-
 		ve.setProperty(Velocity.OUTPUT_ENCODING, "UTF-8");
-
 		//初始化模板
 		ve.init();
+	}
+
+	public static void generatorCode(String templateFile, Map<String, Object> contextMap, String path, String fileName) {
 
 		//设置变量值
 		for (Object key : contextMap.keySet()) {
@@ -70,6 +69,7 @@ public class VelocityInfoOp {
 		 * 文件写入流
 		 */
 		writeFile(pathTemp + "/" + fileName, sw.toString());
+
 	}
 
 	/**

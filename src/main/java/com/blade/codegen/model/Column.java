@@ -1,6 +1,6 @@
 package com.blade.codegen.model;
 
-import com.blade.codegen.StringUtil;
+import com.blade.codegen.utils.StringUtil;
 
 /**
  * 列信息实体

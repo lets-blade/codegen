@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.blade.codegen.CodeGenerator;
-import com.blade.codegen.StringUtil;
+import com.blade.codegen.core.CodeGenerator;
+import com.blade.codegen.utils.StringUtil;
 
 /**
  * 表实体

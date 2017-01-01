@@ -1,0 +1,24 @@
+package ${table.packageName}.service;
+
+import java.util.List;
+
+import com.blade.jdbc.core.Take;
+import com.blade.jdbc.model.Paginator;
+
+import ${table.packageName}.model.${table.className};
+
+public interface ${table.className}Service {
+	
+	${table.className} get${table.className}(${table.getFirstPrimaryKey().fieldType} ${table.getFirstPrimaryKey().fieldName});
+
+	List<${table.className}> get${table.className}List(Take take);
+	
+	Paginator<${table.className}> getPageList(Take take);
+
+	void update(${table.className} ${table.classNameFirstLower}) throw Exception;
+
+	void save(${table.className} ${table.classNameFirstLower}) throw Exception;
+	
+	void delete(${table.getFirstPrimaryKey().fieldType} ${table.getFirstPrimaryKey().fieldName}) throw Exception;
+		
+}
