@@ -1,4 +1,4 @@
-package {{ table.packageName }}.controller;
+package {{ pkgname }}.controller;
 
 
 import com.blade.Blade;
@@ -16,6 +16,7 @@ import com.blade.mvc.annotation.Route;
 import com.blade.mvc.http.HttpMethod;
 import com.blade.mvc.http.Request;
 import com.blade.mvc.http.Response;
+import com.blade.mvc.view.ModelAndView;
 
 import java.io.File;
 import java.util.Date;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class IndexController {
 
 	@Route(value = "/", method = HttpMethod.GET)
-	public ModelAndView show_home(Request request, Response response){
+	public ModelAndView index(Request request, Response response){
 		return new ModelAndView("index.html");
 	}
 

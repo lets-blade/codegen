@@ -1,11 +1,7 @@
-driverClassName = {{ dbmeta.driver }}
-
-url = {{ dbmeta.url }}
-
-username = {{ dbmeta.user }}
-
-password = {{ dbmeta.pass }}
-
+driverClassName = ${dbmeta.driver}
+url = ${dbmeta.url}
+username = ${dbmeta.user}
+password = ${dbmeta.pass}
 initialSize = 5
 maxActive = 10
 minIdle = 3

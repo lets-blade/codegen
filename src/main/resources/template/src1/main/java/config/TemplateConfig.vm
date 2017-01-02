@@ -1,4 +1,4 @@
-package {{ pkgname }}.config;
+package com.javachina.config;
 
 import com.blade.annotation.Order;
 import com.blade.config.BaseConfig;

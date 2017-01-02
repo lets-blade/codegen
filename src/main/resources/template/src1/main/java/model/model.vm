@@ -1,0 +1,37 @@
+##实体类代码
+package ${table.packageName}.model;
+
+import java.io.Serializable;
+
+import com.blade.jdbc.annotation.Table;
+
+/**
+ * ${table.className}对象
+ */
+@Table(name = "${table.tableName}", pk = "${table.pkName}")
+public class ${table.className} implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
+#foreach( $tempColumn in $table.columnList)
+#if(${tempColumn.columnComment.trim()} != '')
+	//${tempColumn.columnComment.trim()}
+#end
+	private ${tempColumn.fieldType} ${tempColumn.columnName};
+	
+#end
+	public ${table.className}(){}
+	
+#foreach( $tempColumn in $table.columnList )
+#if(${tempColumn.fieldType}=="Date")
+#end
+	public ${tempColumn.fieldType} ${tempColumn.fieldGetMethod}() {
+		return ${tempColumn.columnName};
+	}
+
+	public void ${tempColumn.fieldSetMehtod}(${tempColumn.fieldType} ${tempColumn.columnName}) {
+		this.${tempColumn.columnName} = ${tempColumn.columnName};
+	}
+	
+#end
+}

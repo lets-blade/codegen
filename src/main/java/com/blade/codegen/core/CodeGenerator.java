@@ -98,6 +98,8 @@ public class CodeGenerator {
 		PebbleInfoOp.generatorCode(javaPath + "/Application.html", map, pkgPath, "Application.java");
 		PebbleInfoOp.generatorCode(javaPath + "/config/DBConfig.html", map, pkgPath + "/config", "DBConfig.java");
 		PebbleInfoOp.generatorCode(javaPath + "/config/TemplateConfig.html", map, pkgPath + "/config", "TemplateConfig.java");
+		PebbleInfoOp.generatorCode(javaPath + "/exception/TipException.html", map, pkgPath + "/exception", "TipException.java");
+		PebbleInfoOp.generatorCode(javaPath + "/controller/IndexController.html", map, pkgPath + "/controller", "IndexController.java");
 	}
 
 	private void genModel(Table table){
@@ -107,9 +109,9 @@ public class CodeGenerator {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("table", table);
 		PebbleInfoOp.generatorCode(javaPath + "/model/model.html", map, pkgPath + "/model", table.getClassName() + ".java");
-		PebbleInfoOp.generatorCode(javaPath + "/service/service.vm", map, pkgPath + "/service", table.getClassName() + "Service.java");
-		PebbleInfoOp.generatorCode(javaPath + "/service/impl/serviceimpl.vm", map, pkgPath + "/service/impl", table.getClassName() + "ServiceImpl.java");
-		PebbleInfoOp.generatorCode(javaPath + "/controller/controller.html", map, pkgPath + "/controller", table.getClassName() + "Controller.java");
+		PebbleInfoOp.generatorCode(javaPath + "/service/service.html", map, pkgPath + "/service", table.getClassName() + "Service.java");
+		PebbleInfoOp.generatorCode(javaPath + "/service/impl/serviceimpl.html", map, pkgPath + "/service/impl", table.getClassName() + "ServiceImpl.java");
+		PebbleInfoOp.generatorCode(javaPath + "/controller/api/controller.html", map, pkgPath + "/controller/api", table.getClassName() + "Controller.java");
 		logger.info("表：" + table.getTableName() + "成功");
 	}
 

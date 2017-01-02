@@ -1,0 +1,84 @@
+package {{ table.packageName }}.service.impl;
+
+import java.util.List;
+
+import com.blade.ioc.annotation.Inject;
+import com.blade.ioc.annotation.Service;
+import com.blade.jdbc.ActiveRecord;
+import com.blade.jdbc.core.Take;
+import com.blade.jdbc.model.Paginator;
+
+import {{ table.packageName }}.model.{{ table.className }};
+import {{ table.packageName }}.exception.TipException;
+import {{ table.packageName }}.service.{{ table.className }}Service;
+
+@Service
+public class {{ table.className }}ServiceImpl implements {{ table.className }}Service {
+
+	@Inject
+	private ActiveRecord activeRecord;
+
+	@Override
+	public {{ table.className }} get{{ table.className }}ById({{ table.getFirstPrimaryKey().fieldType }} {{ table.getFirstPrimaryKey().fieldName }}) {
+		if(null == {{ table.getFirstPrimaryKey().fieldName }}){
+			return null;
+		}
+		return activeRecord.byId({{ table.className }}.class, {{ table.getFirstPrimaryKey().fieldName }});
+	}
+
+	@Override
+	public List<{{ table.className }}> get{{ table.className }}List(Take take) {
+		if(null != take){
+			if(null != take.getPageRow()){
+				return this.get{{ table.className }}Page(take).getList();
+			}
+			return activeRecord.list(take);
+		}
+		return null;
+	}
+	
+	@Override
+	public Paginator<{{ table.className }}> get{{ table.className }}Page(Take take) {
+		if(null != take){
+			return activeRecord.page(take);
+		}
+		return null;
+	}
+	
+	@Override
+	public void save({{ table.className }} {{ table.classNameFirstLower }}) throws Exception {
+		if(null == {{ table.classNameFirstLower }}){
+			throw new TipException("对象为空");
+		}
+		try {
+			activeRecord.insert({{ table.classNameFirstLower }});
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	@Override
+	public void update({{ table.className }} {{ table.classNameFirstLower }}) throws Exception {
+		if(null == {{ table.classNameFirstLower }}){
+			throw new TipException("对象为空");
+		}
+		try {
+			activeRecord.update({{ table.classNameFirstLower }});
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	@Override
+	public void delete({{ table.getFirstPrimaryKey().fieldType }} {{ table.getFirstPrimaryKey().fieldName }}) throws Exception {
+		if(null == {{ table.getFirstPrimaryKey().fieldName }}){
+			throw new TipException("主键为空");
+		}
+		try {
+			activeRecord.delete({{ table.className }}.class, {{ table.getFirstPrimaryKey().fieldName }});
+		} catch (Exception e){
+			throw e;
+		}
+	}
+		
+}
