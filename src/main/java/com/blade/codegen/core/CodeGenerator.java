@@ -1,9 +1,9 @@
 package com.blade.codegen.core;
 
-import blade.kit.logging.Logger;
-import blade.kit.logging.LoggerFactory;
 import com.blade.codegen.model.*;
 import com.blade.codegen.utils.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
@@ -89,7 +89,7 @@ public class CodeGenerator {
 		String temResPath = CodeGenerator.class.getResource("/template/src/main/resources").getPath();
 
 		PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/pom.xml.html").getPath(), map, rootPath, "pom.xml");
-		PebbleInfoOp.generatorCode(temResPath + "/log4j.properties.html", map, rootPath + "/src/main/resources", "log4j.properties");
+		PebbleInfoOp.generatorCode(temResPath + "/log4j.properties", map, rootPath + "/src/main/resources", "log4j.properties");
 		PebbleInfoOp.generatorCode(temResPath + "/druid.properties.html", map, rootPath + "/src/main/resources", "druid.properties");
 
 		String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();

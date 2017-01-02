@@ -1,19 +1,13 @@
 package com.blade.codegen.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.blade.codegen.core.CodeGenerator;
 import com.blade.codegen.utils.StringUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 表实体
- * 
- * @ClassName: TableBean
- * @author AndrewWen
- * @date 2013-1-14 下午5:05:31
  */
 public class Table {
 
@@ -156,7 +150,7 @@ public class Table {
 	}
 
 	public String getClassNameFirstLower() {
-		this.classNameFirstLower = StringUtils.uncapitalize(this.getClassName());
+		this.classNameFirstLower = StringUtil.getClassLower(this.getClassName());
 		return classNameFirstLower;
 	}
 
