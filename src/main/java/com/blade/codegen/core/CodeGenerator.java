@@ -89,7 +89,7 @@ public class CodeGenerator {
 		String temResPath = CodeGenerator.class.getResource("/template/src/main/resources").getPath();
 
 		PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/pom.xml.html").getPath(), map, rootPath, "pom.xml");
-		PebbleInfoOp.generatorCode(temResPath + "/log4j.properties", map, rootPath + "/src/main/resources", "log4j.properties");
+		PebbleInfoOp.generatorCode(temResPath + "/log4j.properties.html", map, rootPath + "/src/main/resources", "log4j.properties");
 		PebbleInfoOp.generatorCode(temResPath + "/druid.properties.html", map, rootPath + "/src/main/resources", "druid.properties");
 
 		String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();
@@ -118,12 +118,8 @@ public class CodeGenerator {
 	 * 生成项目骨架
 	 */
 	private void genProjectFramework() {
-		File root = new File(rootPath);
-		if(root.exists()){
-			root.delete();
-		}
-		root.mkdirs();
 
+		new File(rootPath).mkdirs();
 		new File(pkgPath).mkdirs();
 
 		String javaPath = rootPath + "/src/main/java";
@@ -131,6 +127,9 @@ public class CodeGenerator {
 
 		String staticPath = rootPath + "/src/main/resources/static";
 		new File(staticPath).mkdirs();
+
+		String viewPath = rootPath + "/src/main/resources/templates";
+		new File(viewPath).mkdir();
 
 		String configPath = pkgPath + "/config";
 		new File(configPath).mkdir();
@@ -148,6 +147,9 @@ public class CodeGenerator {
 		try {
 			String staticDirPath = CodeGenerator.class.getResource("/template/src/main/resources/static").getPath();
 			FileUtil.copyFolder(new File(staticDirPath), new File(rootPath + "/src/main/resources/static"));
+
+			String viewDirPath = CodeGenerator.class.getResource("/template/src/main/resources/templates").getPath();
+			FileUtil.copyFolder(new File(viewDirPath), new File(rootPath + "/src/main/resources/templates"));
 		} catch (Exception e){
 			logger.error("", e);
 		}
