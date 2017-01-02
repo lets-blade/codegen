@@ -6,18 +6,22 @@ This project is based on the blade framework code generator, according to the da
 
 ```java
 public static void main(String[] args) throws IOException {
-	String classDriver = "com.mysql.jdbc.Driver";
-	String url = "jdbc:mysql://127.0.0.1:3306/hello";
-	String username = "root";
-	String password = "root";
-	String classPackage = "com.xxx";
-	String outPath = "E:/";
-	// Table prefix, no is not set
-	CodeGenerator.prefix = "i_";
-	boolean flag = new CodeGenerator().generator(classDriver, url, username, password, classPackage, outPath);
-	if(flag){
-		Runtime.getRuntime().exec("cmd.exe /c start " + outPath + "/src");
-	}
+	DBMeta dbMeta = new DBMeta();
+    dbMeta.setDriver("com.mysql.jdbc.Driver");
+    dbMeta.setUrl("jdbc:mysql://127.0.0.1:3306/demo1");
+    dbMeta.setDbname("demo1");
+    dbMeta.setUser("root");
+    dbMeta.setPass("123456");
+
+    ProjectMeta projectMeta = new ProjectMeta();
+    projectMeta.setName("demo1");
+    projectMeta.setPkgName("com.demo1");
+    projectMeta.setOutPath("/Users/biezhi/workspace/temp");
+    projectMeta.setDbMeta(dbMeta);
+    
+    // 表前缀，没有则不设置
+    CodeGenerator.prefix = "t_";
+    new CodeGenerator(projectMeta).generator();
 }
 ```
 
