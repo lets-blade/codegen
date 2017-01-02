@@ -21,8 +21,6 @@ public static void main(String[] args) throws IOException {
             .setOutPath("/Users/biezhi/workspace/temp")
             .setDbMeta(dbMeta);
 
-    // 表前缀，没有则不设置
-    CodeGenerator.prefix = "t_";
     new CodeGenerator(projectMeta).generator();
 }
 ```
