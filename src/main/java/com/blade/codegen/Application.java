@@ -9,21 +9,21 @@ import com.blade.codegen.model.ProjectMeta;
 public class Application {
 
 	public static void main(String[] args) throws IOException {
-		DBMeta dbMeta = new DBMeta();
-		dbMeta.setDriver("com.mysql.jdbc.Driver");
-		dbMeta.setUrl("jdbc:mysql://127.0.0.1:3306/demo1");
-		dbMeta.setDbname("demo1");
-		dbMeta.setUser("root");
-		dbMeta.setPass("123456");
+		DBMeta dbMeta = new DBMeta()
+				.setDriver("com.mysql.jdbc.Driver")
+				.setUrl("jdbc:mysql://127.0.0.1:3306/demo1")
+				.setDbname("demo1")
+				.setUser("root")
+				.setPass("123456")
+				.setTableName("%")
+				.setPrefix("t_");
 
-		ProjectMeta projectMeta = new ProjectMeta();
-		projectMeta.setName("demo1");
-		projectMeta.setPkgName("com.demo1");
-		projectMeta.setOutPath("/Users/biezhi/workspace/temp");
-		projectMeta.setDbMeta(dbMeta);
+		ProjectMeta projectMeta = new ProjectMeta()
+				.setName("demo1")
+				.setPkgName("com.demo1")
+				.setOutPath("/Users/biezhi/workspace/temp")
+				.setDbMeta(dbMeta);
 
-		// 表前缀，没有则不设置
-		CodeGenerator.prefix = "t_";
 		new CodeGenerator(projectMeta).generator();
 	}
 	

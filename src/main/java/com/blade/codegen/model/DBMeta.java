@@ -10,6 +10,8 @@ public class DBMeta {
     private String url;
     private String user;
     private String pass;
+    private String tableName;
+    private String prefix = "";
 
     public String getDriver() {
         return driver;
@@ -53,6 +55,24 @@ public class DBMeta {
 
     public DBMeta setDbname(String dbname) {
         this.dbname = dbname;
+        return this;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public DBMeta setTableName(String tableName) {
+        this.tableName = tableName;
+        return this;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public DBMeta setPrefix(String prefix) {
+        this.prefix = prefix;
         return this;
     }
 }

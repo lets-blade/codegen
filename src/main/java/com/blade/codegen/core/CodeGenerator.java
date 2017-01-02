@@ -17,7 +17,6 @@ public class CodeGenerator {
 
 	private Logger logger = LoggerFactory.getLogger(CodeGenerator.class);
 	
-	//是否去掉模块前面的编号
 	public static String prefix = "";
 
 	private ProjectMeta projectMeta;
@@ -31,6 +30,7 @@ public class CodeGenerator {
 		this.dbMeta = projectMeta.getDbMeta();
 		this.rootPath = projectMeta.getOutPath() + File.separator + projectMeta.getName();
 		this.pkgPath = rootPath + "/src/main/java/" + projectMeta.getPkgName().replace(".", "/");
+		this.prefix = dbMeta.getPrefix();
 	}
 
 	public boolean generator(){
@@ -60,11 +60,10 @@ public class CodeGenerator {
 
 			logger.info("---------------start---------------");
 
-			/**
-			 * 遍历生成代码
-			 */
 			for (Table table : tableList) {
-				this.genModel(table);
+				if(dbMeta.getTableName().equals("%") || dbMeta.getTableName().equals(table.getTableName())){
+					this.genModel(table);
+				}
 			}
 			logger.info("--------------- end time：" + (System.currentTimeMillis() - start) + "ms-----");
 			logger.info("output path：" + rootPath);
