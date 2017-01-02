@@ -91,6 +91,7 @@ public class CodeGenerator {
 		PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/pom.xml.html").getPath(), map, rootPath, "pom.xml");
 		PebbleInfoOp.generatorCode(temResPath + "/log4j.properties.html", map, rootPath + "/src/main/resources", "log4j.properties");
 		PebbleInfoOp.generatorCode(temResPath + "/druid.properties.html", map, rootPath + "/src/main/resources", "druid.properties");
+		PebbleInfoOp.generatorCode(temResPath + "/app.properties.html", map, rootPath + "/src/main/resources", "app.properties");
 
 		String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();
 
