@@ -25,6 +25,11 @@ public class ProjectMeta {
      */
     private DBMeta dbMeta;
 
+    /**
+     * 是否生成驼峰式命名
+     */
+    private boolean hump;
+
     public String getName() {
         return name;
     }
@@ -58,6 +63,15 @@ public class ProjectMeta {
 
     public ProjectMeta setDbMeta(DBMeta dbMeta) {
         this.dbMeta = dbMeta;
+        return this;
+    }
+
+    public boolean isHump() {
+        return hump;
+    }
+
+    public ProjectMeta setHump(boolean hump) {
+        this.hump = hump;
         return this;
     }
 }

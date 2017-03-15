@@ -15,145 +15,144 @@ import java.util.Map;
  */
 public class CodeGenerator {
 
-	private Logger logger = LoggerFactory.getLogger(CodeGenerator.class);
-	
-	public static String prefix = "";
+    private Logger logger = LoggerFactory.getLogger(CodeGenerator.class);
 
-	private ProjectMeta projectMeta;
-	private DBMeta dbMeta;
+    public static String prefix = "";
 
-	private String rootPath;
-	private String pkgPath;
+    private ProjectMeta projectMeta;
+    private DBMeta dbMeta;
 
-	public CodeGenerator(ProjectMeta projectMeta){
-		this.projectMeta = projectMeta;
-		this.dbMeta = projectMeta.getDbMeta();
-		this.rootPath = projectMeta.getOutPath() + File.separator + projectMeta.getName();
-		this.pkgPath = rootPath + "/src/main/java/" + projectMeta.getPkgName().replace(".", "/");
-		this.prefix = dbMeta.getPrefix();
-	}
+    private String rootPath;
+    private String pkgPath;
 
-	public boolean generator(){
+    public CodeGenerator(ProjectMeta projectMeta) {
+        this.projectMeta = projectMeta;
+        this.dbMeta = projectMeta.getDbMeta();
+        this.rootPath = projectMeta.getOutPath() + File.separator + projectMeta.getName();
+        this.pkgPath = rootPath + "/src/main/java/" + projectMeta.getPkgName().replace(".", "/");
+        this.prefix = dbMeta.getPrefix();
+    }
 
-		try {
-			Long start = System.currentTimeMillis();
+    public boolean generator() {
 
-			// 构建项目骨架
-			this.genProjectFramework();
+        try {
+            Long start = System.currentTimeMillis();
 
-			// 生成配置文件
-			this.genConfigFile();
+            // 构建项目骨架
+            this.genProjectFramework();
 
-			// 生成代码和前端代码
-			String url = dbMeta.getUrl();
-			String driver = dbMeta.getDriver();
-			String user = dbMeta.getUser();
-			String pass = dbMeta.getPass();
-			// 获取数据库名
-			String dbname = dbMeta.getDbname();
+            // 生成配置文件
+            this.genConfigFile();
 
-			// 获取数据库信息
-			Database databaseBean = new DatabaseInfoOp(driver, url, user, pass, dbname).getDbInfo();
+            // 生成代码和前端代码
+            String url = dbMeta.getUrl();
+            String driver = dbMeta.getDriver();
+            String user = dbMeta.getUser();
+            String pass = dbMeta.getPass();
+            // 获取数据库名
+            String dbname = dbMeta.getDbname();
 
-			// 获取该库所有表
-			List<Table> tableList = databaseBean.getTableList();
+            // 获取数据库信息
+            Database databaseBean = new DatabaseInfoOp(driver, url, user, pass, dbname).getDbInfo(projectMeta.isHump());
 
-			logger.info("---------------start---------------");
+            // 获取该库所有表
+            List<Table> tableList = databaseBean.getTableList();
 
-			for (Table table : tableList) {
-				if(dbMeta.getTableName().equals("%") || dbMeta.getTableName().equals(table.getTableName())){
-					this.genModel(table);
-				}
-			}
-			logger.info("--------------- end time：" + (System.currentTimeMillis() - start) + "ms-----");
-			logger.info("output path：" + rootPath);
-			logger.info("project name：" + projectMeta.getName());
-			logger.info("package name：" + projectMeta.getPkgName());
-			logger.info("------------------------------------");
-			return true;
-		} catch (Exception e) {
-			logger.error("", e);
-		}
-		return false;
-	}
+            logger.info("---------------start---------------");
 
-	/**
-	 * 生成配置文件
-	 */
-	private void genConfigFile() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("projectname", projectMeta.getName());
-		map.put("pkgname", projectMeta.getPkgName());
-		map.put("dbmeta", dbMeta);
+            for (Table table : tableList) {
+                if (dbMeta.getTableName().equals("%") || dbMeta.getTableName().equals(table.getTableName())) {
+                    this.genModel(table);
+                }
+            }
+            logger.info("--------------- end time：" + (System.currentTimeMillis() - start) + "ms-----");
+            logger.info("output path：" + rootPath);
+            logger.info("project name：" + projectMeta.getName());
+            logger.info("package name：" + projectMeta.getPkgName());
+            logger.info("------------------------------------");
+            return true;
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return false;
+    }
 
-		String temResPath = CodeGenerator.class.getResource("/template/src/main/resources").getPath();
+    /**
+     * 生成配置文件
+     */
+    private void genConfigFile() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("projectname", projectMeta.getName());
+        map.put("pkgname", projectMeta.getPkgName());
+        map.put("dbmeta", dbMeta);
 
-		PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/pom.xml.html").getPath(), map, rootPath, "pom.xml");
-		PebbleInfoOp.generatorCode(temResPath + "/log4j.properties.html", map, rootPath + "/src/main/resources", "log4j.properties");
-		PebbleInfoOp.generatorCode(temResPath + "/druid.properties.html", map, rootPath + "/src/main/resources", "druid.properties");
-		PebbleInfoOp.generatorCode(temResPath + "/app.properties.html", map, rootPath + "/src/main/resources", "app.properties");
+        String temResPath = CodeGenerator.class.getResource("/template/src/main/resources").getPath();
 
-		String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();
+        PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/pom.xml.html").getPath(), map, rootPath, "pom.xml");
+        PebbleInfoOp.generatorCode(temResPath + "/log4j.properties.html", map, rootPath + "/src/main/resources", "log4j.properties");
+        PebbleInfoOp.generatorCode(temResPath + "/app.properties.html", map, rootPath + "/src/main/resources", "app.properties");
 
-		PebbleInfoOp.generatorCode(javaPath + "/Application.html", map, pkgPath, "Application.java");
-		PebbleInfoOp.generatorCode(javaPath + "/config/DBConfig.html", map, pkgPath + "/config", "DBConfig.java");
-		PebbleInfoOp.generatorCode(javaPath + "/config/TemplateConfig.html", map, pkgPath + "/config", "TemplateConfig.java");
-		PebbleInfoOp.generatorCode(javaPath + "/exception/TipException.html", map, pkgPath + "/exception", "TipException.java");
-		PebbleInfoOp.generatorCode(javaPath + "/controller/IndexController.html", map, pkgPath + "/controller", "IndexController.java");
-	}
+        String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();
 
-	private void genModel(Table table){
-		String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();
+        PebbleInfoOp.generatorCode(javaPath + "/Application.html", map, pkgPath, "Application.java");
+        PebbleInfoOp.generatorCode(javaPath + "/init/WebContext.html", map, pkgPath + "/init", "WebContext.java");
+        PebbleInfoOp.generatorCode(javaPath + "/exception/TipException.html", map, pkgPath + "/exception", "TipException.java");
+        PebbleInfoOp.generatorCode(javaPath + "/controller/IndexController.html", map, pkgPath + "/controller", "IndexController.java");
+        PebbleInfoOp.generatorCode(javaPath + "/interceptor/BaseInterceptor.html", map, pkgPath + "/interceptor", "BaseInterceptor.java");
+    }
 
-		table.setPackageName(projectMeta.getPkgName());
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("table", table);
-		PebbleInfoOp.generatorCode(javaPath + "/model/model.html", map, pkgPath + "/model", table.getClassName() + ".java");
-		PebbleInfoOp.generatorCode(javaPath + "/service/service.html", map, pkgPath + "/service", table.getClassName() + "Service.java");
-		PebbleInfoOp.generatorCode(javaPath + "/service/impl/serviceimpl.html", map, pkgPath + "/service/impl", table.getClassName() + "ServiceImpl.java");
-		PebbleInfoOp.generatorCode(javaPath + "/controller/api/controller.html", map, pkgPath + "/controller/api", table.getClassName() + "Controller.java");
-		logger.info("表：" + table.getTableName() + "成功");
-	}
+    private void genModel(Table table) {
+        String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();
 
-	/**
-	 * 生成项目骨架
-	 */
-	private void genProjectFramework() {
+        table.setPackageName(projectMeta.getPkgName());
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("table", table);
+        PebbleInfoOp.generatorCode(javaPath + "/model/model.html", map, pkgPath + "/model", table.getClassName() + ".java");
+        PebbleInfoOp.generatorCode(javaPath + "/service/service.html", map, pkgPath + "/service", table.getClassName() + "Service.java");
+        PebbleInfoOp.generatorCode(javaPath + "/service/impl/serviceimpl.html", map, pkgPath + "/service/impl", table.getClassName() + "ServiceImpl.java");
+        PebbleInfoOp.generatorCode(javaPath + "/controller/api/controller.html", map, pkgPath + "/controller/api", table.getClassName() + "Controller.java");
+        logger.info("表：" + table.getTableName() + "成功");
+    }
 
-		new File(rootPath).mkdirs();
-		new File(pkgPath).mkdirs();
+    /**
+     * 生成项目骨架
+     */
+    private void genProjectFramework() {
 
-		String javaPath = rootPath + "/src/main/java";
-		new File(javaPath).mkdirs();
+        new File(rootPath).mkdirs();
+        new File(pkgPath).mkdirs();
 
-		String staticPath = rootPath + "/src/main/resources/static";
-		new File(staticPath).mkdirs();
+        String javaPath = rootPath + "/src/main/java";
+        new File(javaPath).mkdirs();
 
-		String viewPath = rootPath + "/src/main/resources/templates";
-		new File(viewPath).mkdir();
+        String staticPath = rootPath + "/src/main/resources/static";
+        new File(staticPath).mkdirs();
 
-		String configPath = pkgPath + "/config";
-		new File(configPath).mkdir();
+        String viewPath = rootPath + "/src/main/resources/templates";
+        new File(viewPath).mkdir();
 
-		String controllerPath = pkgPath + "/controller";
-		new File(controllerPath).mkdir();
+        String configPath = pkgPath + "/init";
+        new File(configPath).mkdir();
 
-		String servicePath = pkgPath + "/service";
-		new File(servicePath).mkdir();
+        String controllerPath = pkgPath + "/controller";
+        new File(controllerPath).mkdir();
 
-		String modelPath = pkgPath + "/model";
-		new File(modelPath).mkdir();
+        String servicePath = pkgPath + "/service";
+        new File(servicePath).mkdir();
 
-		// 复制静态文件
-		try {
-			String staticDirPath = CodeGenerator.class.getResource("/template/src/main/resources/static").getPath();
-			FileUtil.copyFolder(new File(staticDirPath), new File(rootPath + "/src/main/resources/static"));
+        String modelPath = pkgPath + "/model";
+        new File(modelPath).mkdir();
 
-			String viewDirPath = CodeGenerator.class.getResource("/template/src/main/resources/templates").getPath();
-			FileUtil.copyFolder(new File(viewDirPath), new File(rootPath + "/src/main/resources/templates"));
-		} catch (Exception e){
-			logger.error("", e);
-		}
-	}
+        // 复制静态文件
+        try {
+            String staticDirPath = CodeGenerator.class.getResource("/template/src/main/resources/static").getPath();
+            FileUtil.copyFolder(new File(staticDirPath), new File(rootPath + "/src/main/resources/static"));
+
+            String viewDirPath = CodeGenerator.class.getResource("/template/src/main/resources/templates").getPath();
+            FileUtil.copyFolder(new File(viewDirPath), new File(rootPath + "/src/main/resources/templates"));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+    }
 
 }

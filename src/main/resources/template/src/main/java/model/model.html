@@ -3,6 +3,9 @@ package {{ table.packageName }}.model;
 import java.io.Serializable;
 import java.util.Date;
 import com.blade.jdbc.annotation.Table;
+{% if table.isHump %}
+import javax.persistence.Column;
+{% endif %}
 
 //{{ table.tableComment }}
 
@@ -16,18 +19,22 @@ public class {{ table.className }} implements Serializable {
 	// {{ tempColumn.columnComment }}
 
 {% endif %}
-	private {{ tempColumn.fieldType }} {{ tempColumn.columnName }};
+
+{% if table.isHump %}
+	@Column(name = "{{ tempColumn.columnName }}")
+{% endif %}
+	private {{ tempColumn.fieldType }} {{ tempColumn.fieldName }};
 
 {% endfor %}
 	public {{ table.className }}(){}
 
 {% for tempColumn in table.columnList %}
 	public {{ tempColumn.fieldType }} {{ tempColumn.fieldGetMethod }}() {
-		return {{ tempColumn.columnName }};
+		return {{ tempColumn.fieldName }};
 	}
 
-	public void {{ tempColumn.fieldSetMehtod }}({{ tempColumn.fieldType }} {{ tempColumn.columnName }}) {
-		this.{{ tempColumn.columnName }} = {{ tempColumn.columnName }};
+	public void {{ tempColumn.fieldSetMehtod }}({{ tempColumn.fieldType }} {{ tempColumn.fieldName }}) {
+		this.{{ tempColumn.fieldName }} = {{ tempColumn.fieldName }};
 	}
 
 {% endfor %}

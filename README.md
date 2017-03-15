@@ -18,6 +18,7 @@ public static void main(String[] args) throws IOException {
     ProjectMeta projectMeta = new ProjectMeta()
             .setName("demo1")
             .setPkgName("com.demo1")
+            .setHump(true)
             .setOutPath("/Users/biezhi/workspace/temp")
             .setDbMeta(dbMeta);
 

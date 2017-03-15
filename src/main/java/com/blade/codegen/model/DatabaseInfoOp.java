@@ -1,232 +1,232 @@
 package com.blade.codegen.model;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.blade.codegen.utils.StringUtil;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.blade.codegen.model.Column;
-import com.blade.codegen.model.Database;
-import com.blade.codegen.model.Table;
 
 /**
  * 数据库信息获得操作类
  */
 public class DatabaseInfoOp {
 
-	Connection conn = null;
+    Connection conn = null;
 
-	private String classDriver;
-	private String url;
-	private String username;
-	private String password;
-	private String schema;
+    private String classDriver;
+    private String url;
+    private String username;
+    private String password;
+    private String schema;
 
-	public DatabaseInfoOp(String classDriver, String url, String username, String password) {
-		super();
-		this.classDriver = classDriver;
-		this.url = url;
-		this.username = username;
-		this.password = password;
-	}
-	
-	public DatabaseInfoOp(String classDriver, String url, String username, String password, String schema) {
-		super();
-		this.classDriver = classDriver;
-		this.url = url;
-		this.username = username;
-		this.password = password;
-		this.schema = schema;
-	}
+    public DatabaseInfoOp(String classDriver, String url, String username, String password) {
+        super();
+        this.classDriver = classDriver;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
 
-	public Connection getConnectionByJDBC() {
-		try {
-			// 装载驱动包类
-			Class.forName(classDriver);
-			// 加载驱动
-			conn = DriverManager.getConnection(url, username, password);
-		} catch (ClassNotFoundException e) {
-			System.out.println("装载驱动包出现异常!请查正！");
-			e.printStackTrace();
-		} catch (SQLException e) {
-			System.out.println("链接数据库发生异常!");
-			e.printStackTrace();
-		}
-		return conn;
-	}
+    public DatabaseInfoOp(String classDriver, String url, String username, String password, String schema) {
+        super();
+        this.classDriver = classDriver;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.schema = schema;
+    }
 
-	/**
-	 * 获得表数据
-	 * 
-	 * @Title: getDbInfo
-	 * @return
-	 * @throws SQLException
-	 */
-	public Database getDbInfo(String tableNamePattern) throws SQLException {
+    public Connection getConnectionByJDBC() {
+        try {
+            // 装载驱动包类
+            Class.forName(classDriver);
+            // 加载驱动
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (ClassNotFoundException e) {
+            System.out.println("装载驱动包出现异常!请查正！");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("链接数据库发生异常!");
+            e.printStackTrace();
+        }
+        return conn;
+    }
 
-		Database databaseBean = new Database();
+    /**
+     * 获得表数据
+     *
+     * @return
+     * @throws SQLException
+     * @Title: getDbInfo
+     */
+    public Database getDbInfo(String tableNamePattern) throws SQLException {
 
-		// 表队列
-		List<Table> tableList = new ArrayList<Table>();
+        Database databaseBean = new Database();
 
-		// 初始化数据库
-		getConnectionByJDBC();
+        // 表队列
+        List<Table> tableList = new ArrayList<Table>();
 
-		// 获取数据库信息
-		DatabaseMetaData dbmd = conn.getMetaData();
+        // 初始化数据库
+        getConnectionByJDBC();
 
-		databaseBean.setDatabaseProductName(dbmd.getDatabaseProductName());
+        // 获取数据库信息
+        DatabaseMetaData dbmd = conn.getMetaData();
 
-		// 获得数据库表
-		ResultSet rs = dbmd.getTables(null, null, tableNamePattern, new String[] { "TABLE", "VIEW" });
+        databaseBean.setDatabaseProductName(dbmd.getDatabaseProductName());
 
-		// String tableName = "";
-		while (rs.next()) {
-			Table table = new Table();
+        // 获得数据库表
+        ResultSet rs = dbmd.getTables(null, null, tableNamePattern, new String[]{"TABLE", "VIEW"});
 
-			table.setTableName(rs.getString("TABLE_NAME"));
-			table.setTableComment(rs.getString("REMARKS"));
-			table.setTableSchem(rs.getString(1));
+        // String tableName = "";
+        while (rs.next()) {
+            Table table = new Table();
 
-			// 设置列信息
-			ResultSet rscol = dbmd.getColumns(null, null, table.getTableName(), null);
+            table.setTableName(rs.getString("TABLE_NAME"));
+            table.setTableComment(rs.getString("REMARKS"));
+            table.setTableSchem(rs.getString(1));
 
-			Column tempColumn;
+            // 设置列信息
+            ResultSet rscol = dbmd.getColumns(null, null, table.getTableName(), null);
 
-			while (rscol.next()) {
-				tempColumn = new Column();
-				tempColumn.setColumnName(rscol.getString("COLUMN_NAME"));
-				tempColumn.setColumnType(Integer.parseInt(rscol.getString("DATA_TYPE")));
+            Column tempColumn;
 
-				String remarks = rscol.getString("REMARKS");
-				if (remarks.length() < 1)
-					remarks = "";
-				tempColumn.setColumnComment(remarks);
-				tempColumn.setAutoIncrement(rscol.getString("IS_AUTOINCREMENT").equals("YES"));
-				tempColumn.setNullAble(rscol.getString("IS_AUTOINCREMENT").equals("YES"));
+            while (rscol.next()) {
+                tempColumn = new Column();
+                tempColumn.setColumnName(rscol.getString("COLUMN_NAME"));
+                tempColumn.setColumnType(Integer.parseInt(rscol.getString("DATA_TYPE")));
 
-				// 添加列到表中
-				table.getColumnList().add(tempColumn);
+                String remarks = rscol.getString("REMARKS");
+                if (remarks.length() < 1)
+                    remarks = "";
+                tempColumn.setColumnComment(remarks);
+                tempColumn.setAutoIncrement(rscol.getString("IS_AUTOINCREMENT").equals("YES"));
+                tempColumn.setNullAble(rscol.getString("IS_AUTOINCREMENT").equals("YES"));
 
-			}
+                // 添加列到表中
+                table.getColumnList().add(tempColumn);
 
-			// 设置主键列
-			ResultSet rsPrimary = dbmd.getPrimaryKeys(null, null, table.getTableName());
-			while (rsPrimary.next()) {
-				if (rsPrimary.getString("COLUMN_NAME") != null) {
+            }
 
-					for (int i = 0; i < table.getColumnList().size(); i++) {
-						Column coltemp = table.getColumnList().get(i);
-						if (coltemp.getColumnName().equals(rsPrimary.getString("COLUMN_NAME"))) {
-							coltemp.setPrimary(true);
-						}
-					}
+            // 设置主键列
+            ResultSet rsPrimary = dbmd.getPrimaryKeys(null, null, table.getTableName());
+            while (rsPrimary.next()) {
+                if (rsPrimary.getString("COLUMN_NAME") != null) {
 
-				}
-			}
+                    for (int i = 0; i < table.getColumnList().size(); i++) {
+                        Column coltemp = table.getColumnList().get(i);
+                        if (coltemp.getColumnName().equals(rsPrimary.getString("COLUMN_NAME"))) {
+                            coltemp.setPrimary(true);
+                        }
+                    }
 
-			// 设置外键列
-			ResultSet rsFPrimary = dbmd.getImportedKeys(null, null, table.getTableName());
-			while (rsFPrimary.next()) {
+                }
+            }
 
-				for (int i = 0; i < table.getColumnList().size(); i++) {
-					Column coltemp = table.getColumnList().get(i);
-					if (coltemp.getColumnName().equals(rsFPrimary.getString("FKCOLUMN_NAME"))) {
-						coltemp.setForeignKey(true);
-					}
-				}
-			}
-			tableList.add(table);
-		}
-		databaseBean.setTableList(tableList);
-		return databaseBean;
-	}
+            // 设置外键列
+            ResultSet rsFPrimary = dbmd.getImportedKeys(null, null, table.getTableName());
+            while (rsFPrimary.next()) {
 
-	public Database getDbInfo() throws SQLException {
+                for (int i = 0; i < table.getColumnList().size(); i++) {
+                    Column coltemp = table.getColumnList().get(i);
+                    if (coltemp.getColumnName().equals(rsFPrimary.getString("FKCOLUMN_NAME"))) {
+                        coltemp.setForeignKey(true);
+                    }
+                }
+            }
+            tableList.add(table);
+        }
+        databaseBean.setTableList(tableList);
+        return databaseBean;
+    }
 
-		Database databaseBean = new Database();
+    public Database getDbInfo(boolean isHump) throws SQLException {
 
-		// 表队列
-		List<Table> tableList = new ArrayList<Table>();
+        Database databaseBean = new Database();
 
-		// 初始化数据库
-		getConnectionByJDBC();
+        // 表队列
+        List<Table> tableList = new ArrayList<Table>();
 
-		// 获取数据库信息
-		DatabaseMetaData dbmd = conn.getMetaData();
+        // 初始化数据库
+        getConnectionByJDBC();
 
-		databaseBean.setDatabaseProductName(dbmd.getDatabaseProductName());
+        // 获取数据库信息
+        DatabaseMetaData dbmd = conn.getMetaData();
 
-		// 获得数据库表
-		ResultSet rs = dbmd.getTables(null, this.schema, null, new String[] { "TABLE", "VIEW" });
+        databaseBean.setDatabaseProductName(dbmd.getDatabaseProductName());
 
-		// String tableName = "";
-		while (rs.next()) {
-			Table table = new Table();
+        // 获得数据库表
+        ResultSet rs = dbmd.getTables(null, this.schema, null, new String[]{"TABLE", "VIEW"});
 
-			table.setTableName(rs.getString("TABLE_NAME"));
-			table.setTableComment(rs.getString("REMARKS"));
-			table.setTableSchem(rs.getString(1));
+        // String tableName = "";
+        while (rs.next()) {
+            Table table = new Table();
 
-			// 设置列信息
-			ResultSet rscol = dbmd.getColumns(null, null, table.getTableName(), null);
+            table.setHump(isHump);
+            table.setTableName(rs.getString("TABLE_NAME"));
+            table.setTableComment(rs.getString("REMARKS"));
+            table.setTableSchem(rs.getString(1));
 
-			Column tempColumn;
+            // 设置列信息
+            ResultSet rscol = dbmd.getColumns(null, null, table.getTableName(), null);
 
-			while (rscol.next()) {
-				tempColumn = new Column();
-				tempColumn.setColumnName(rscol.getString("COLUMN_NAME"));
-				tempColumn.setColumnType(Integer.parseInt(rscol.getString("DATA_TYPE")));
+            Column tempColumn;
+            while (rscol.next()) {
+                tempColumn = new Column();
+                if (isHump) {
+                    tempColumn.setFieldName(StringUtil.getDomainColumnName(rscol.getString("COLUMN_NAME")));
+                } else {
+                    tempColumn.setFieldName(rscol.getString("COLUMN_NAME"));
+                }
 
-				String remarks = rscol.getString("REMARKS");
-				if (remarks.length() < 1)
-					remarks = "";
-				tempColumn.setColumnComment(remarks);
-				tempColumn.setAutoIncrement(rscol.getString("IS_AUTOINCREMENT").equals("YES"));
-				tempColumn.setNullAble(rscol.getString("IS_AUTOINCREMENT").equals("YES"));
+                tempColumn.setColumnName(rscol.getString("COLUMN_NAME"));
+                tempColumn.setColumnType(Integer.parseInt(rscol.getString("DATA_TYPE")));
 
-				// 添加列到表中
-				table.getColumnList().add(tempColumn);
-				
-			}
+                String remarks = rscol.getString("REMARKS");
+                if (remarks.length() < 1)
+                    remarks = "";
+                tempColumn.setColumnComment(remarks);
+                tempColumn.setAutoIncrement(rscol.getString("IS_AUTOINCREMENT").equals("YES"));
+                tempColumn.setNullAble(rscol.getString("IS_AUTOINCREMENT").equals("YES"));
 
-			// 设置主键列
-			ResultSet rsPrimary = dbmd.getPrimaryKeys(null, null, table.getTableName());
-			while (rsPrimary.next()) {
-				if (rsPrimary.getString("COLUMN_NAME") != null) {
+                // 添加列到表中
+                table.getColumnList().add(tempColumn);
 
-					for (int i = 0; i < table.getColumnList().size(); i++) {
-						Column coltemp = table.getColumnList().get(i);
-						if (coltemp.getColumnName().equals(rsPrimary.getString("COLUMN_NAME"))) {
-							coltemp.setPrimary(true);
-							table.setPkName(coltemp.getColumnName());
-						}
-					}
+            }
 
-				}
-			}
+            // 设置主键列
+            ResultSet rsPrimary = dbmd.getPrimaryKeys(null, null, table.getTableName());
+            while (rsPrimary.next()) {
+                if (rsPrimary.getString("COLUMN_NAME") != null) {
 
-			// 设置外键列
-			ResultSet rsFPrimary = dbmd.getImportedKeys(null, null, table.getTableName());
-			while (rsFPrimary.next()) {
+                    for (int i = 0; i < table.getColumnList().size(); i++) {
+                        Column coltemp = table.getColumnList().get(i);
+                        if (coltemp.getColumnName().equals(rsPrimary.getString("COLUMN_NAME"))) {
+                            coltemp.setPrimary(true);
+                            table.setPkName(coltemp.getColumnName());
+                        }
+                    }
 
-				for (int i = 0; i < table.getColumnList().size(); i++) {
-					Column coltemp = table.getColumnList().get(i);
-					if (coltemp.getColumnName().equals(rsFPrimary.getString("FKCOLUMN_NAME"))) {
-						//System.out.println("FKCOLUMN_NAME "+rsFPrimary.getString("FKCOLUMN_NAME"));
-						coltemp.setForeignKey(true);
-					}
-				}
-			}
-			tableList.add(table);
+                }
+            }
 
-		}
+            // 设置外键列
+            ResultSet rsFPrimary = dbmd.getImportedKeys(null, null, table.getTableName());
+            while (rsFPrimary.next()) {
 
-		databaseBean.setTableList(tableList);
-		return databaseBean;
-	}
-	
+                for (int i = 0; i < table.getColumnList().size(); i++) {
+                    Column coltemp = table.getColumnList().get(i);
+                    if (coltemp.getColumnName().equals(rsFPrimary.getString("FKCOLUMN_NAME"))) {
+                        //System.out.println("FKCOLUMN_NAME "+rsFPrimary.getString("FKCOLUMN_NAME"));
+                        coltemp.setForeignKey(true);
+                    }
+                }
+            }
+            tableList.add(table);
+
+        }
+
+        databaseBean.setTableList(tableList);
+        return databaseBean;
+    }
+
 }
