@@ -89,16 +89,15 @@ public class CodeGenerator {
         String temResPath = CodeGenerator.class.getResource("/template/src/main/resources").getPath();
 
         PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/pom.xml.html").getPath(), map, rootPath, "pom.xml");
-        PebbleInfoOp.generatorCode(temResPath + "/log4j.properties.html", map, rootPath + "/src/main/resources", "log4j.properties");
         PebbleInfoOp.generatorCode(temResPath + "/app.properties.html", map, rootPath + "/src/main/resources", "app.properties");
 
         String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();
 
         PebbleInfoOp.generatorCode(javaPath + "/Application.html", map, pkgPath, "Application.java");
-        PebbleInfoOp.generatorCode(javaPath + "/init/WebContext.html", map, pkgPath + "/init", "WebContext.java");
+        PebbleInfoOp.generatorCode(javaPath + "/config/BaseConfig.html", map, pkgPath + "/config", "BaseConfig.java");
         PebbleInfoOp.generatorCode(javaPath + "/exception/TipException.html", map, pkgPath + "/exception", "TipException.java");
         PebbleInfoOp.generatorCode(javaPath + "/controller/IndexController.html", map, pkgPath + "/controller", "IndexController.java");
-        PebbleInfoOp.generatorCode(javaPath + "/interceptor/BaseInterceptor.html", map, pkgPath + "/interceptor", "BaseInterceptor.java");
+        PebbleInfoOp.generatorCode(javaPath + "/webhook/BaseWebHook.html", map, pkgPath + "/webhook", "BaseWebHook.java");
     }
 
     private void genModel(Table table) {
@@ -108,8 +107,6 @@ public class CodeGenerator {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("table", table);
         PebbleInfoOp.generatorCode(javaPath + "/model/model.html", map, pkgPath + "/model", table.getClassName() + ".java");
-        PebbleInfoOp.generatorCode(javaPath + "/service/service.html", map, pkgPath + "/service", table.getClassName() + "Service.java");
-        PebbleInfoOp.generatorCode(javaPath + "/service/impl/serviceimpl.html", map, pkgPath + "/service/impl", table.getClassName() + "ServiceImpl.java");
         PebbleInfoOp.generatorCode(javaPath + "/controller/api/controller.html", map, pkgPath + "/controller/api", table.getClassName() + "Controller.java");
         logger.info("表：" + table.getTableName() + "成功");
     }
@@ -131,14 +128,11 @@ public class CodeGenerator {
         String viewPath = rootPath + "/src/main/resources/templates";
         new File(viewPath).mkdir();
 
-        String configPath = pkgPath + "/init";
+        String configPath = pkgPath + "/config";
         new File(configPath).mkdir();
 
         String controllerPath = pkgPath + "/controller";
         new File(controllerPath).mkdir();
-
-        String servicePath = pkgPath + "/service";
-        new File(servicePath).mkdir();
 
         String modelPath = pkgPath + "/model";
         new File(modelPath).mkdir();

@@ -1,18 +1,13 @@
 package {{ table.packageName }}.model;
 
-import java.io.Serializable;
 import java.util.Date;
 import com.blade.jdbc.annotation.Table;
-{% if table.isHump %}
-import javax.persistence.Column;
-{% endif %}
+import com.blade.jdbc.core.ActiveRecord;
 
 //{{ table.tableComment }}
 
-@Table(name = "{{ table.tableName }}", pk = "{{ table.pkName }}")
-public class {{ table.className }} implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+@Table(value = "{{ table.tableName }}", pk = "{{ table.pkName }}")
+public class {{ table.className }} extends ActiveRecord {
 
 {% for tempColumn in table.columnList %}
 {% if tempColumn.columnComment != "" %}
@@ -20,9 +15,6 @@ public class {{ table.className }} implements Serializable {
 
 {% endif %}
 
-{% if table.isHump %}
-	@Column(name = "{{ tempColumn.columnName }}")
-{% endif %}
 	private {{ tempColumn.fieldType }} {{ tempColumn.fieldName }};
 
 {% endfor %}

@@ -1,0 +1,22 @@
+package {{ pkgname }}.webhook;
+
+import com.blade.ioc.annotation.Bean;
+import com.blade.mvc.hook.Signature;
+import com.blade.mvc.hook.WebHook;
+import com.blade.mvc.http.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Bean
+public class BaseWebHook implements WebHook {
+
+    private static final Logger log = LoggerFactory.getLogger(BaseWebHook.class);
+
+    @Override
+    public boolean before(Signature signature) {
+        Request request = signature.request();
+        log.info("用户访问地址：{}, 请求IP：{} ", request.uri(), request.address());
+        return true;
+    }
+
+}

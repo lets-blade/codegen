@@ -1,0 +1,21 @@
+package {{ pkgname }}.config;
+
+import com.blade.Blade;
+import com.blade.event.BeanProcessor;
+import com.blade.jdbc.Base;
+import com.blade.mvc.view.template.JetbrickTemplateEngine;
+
+/*
+* web初始化，初始化模板引擎/数据库
+*/
+public class BaseConfig implements BeanProcessor {
+
+    @Override
+    public void processor(Blade blade) {
+        JetbrickTemplateEngine templateEngine = new JetbrickTemplateEngine();
+        blade.templateEngine(templateEngine);
+
+        // 数据库，生产环境建议使用连接池代替
+        Base.open("url", "username", "password");
+    }
+}
