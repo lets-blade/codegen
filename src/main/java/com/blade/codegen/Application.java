@@ -11,16 +11,16 @@ public class Application {
     public static void main(String[] args) throws IOException {
         DBMeta dbMeta = new DBMeta()
                 .setDriver("com.mysql.jdbc.Driver")
-                .setUrl("jdbc:mysql://127.0.0.1:3306/nice")
+                .setUrl("jdbc:mysql://127.0.0.1:3306/demo")
                 .setDbname("demo")
                 .setUser("root")
                 .setPass("123456")
-                .setTableName("%")
-                .setPrefix("t_");
+                .setTableName("%");
+//                .setPrefix("t_");
 
         ProjectMeta projectMeta = new ProjectMeta()
                 .setName("nice")
-                .setPkgName("io.github.biezhi.nice")
+                .setPkgName("io.github.biezhi.demo")
                 .setHump(true)
                 .setOutPath("/Users/biezhi/workspace/temp")
                 .setDbMeta(dbMeta);
