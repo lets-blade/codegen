@@ -1,11 +1,14 @@
 package {{ table.packageName }}.model;
 
-import java.util.Date;
 import com.blade.jdbc.annotation.Table;
 import com.blade.jdbc.core.ActiveRecord;
+import lombok.Data;
+
+import java.util.Date;
 
 //{{ table.tableComment }}
 
+@Data
 @Table(value = "{{ table.tableName }}", pk = "{{ table.pkName }}")
 public class {{ table.className }} extends ActiveRecord {
 
@@ -16,18 +19,6 @@ public class {{ table.className }} extends ActiveRecord {
 {% endif %}
 
 	private {{ tempColumn.fieldType }} {{ tempColumn.fieldName }};
-
-{% endfor %}
-	public {{ table.className }}(){}
-
-{% for tempColumn in table.columnList %}
-	public {{ tempColumn.fieldType }} {{ tempColumn.fieldGetMethod }}() {
-		return {{ tempColumn.fieldName }};
-	}
-
-	public void {{ tempColumn.fieldSetMehtod }}({{ tempColumn.fieldType }} {{ tempColumn.fieldName }}) {
-		this.{{ tempColumn.fieldName }} = {{ tempColumn.fieldName }};
-	}
 
 {% endfor %}
 

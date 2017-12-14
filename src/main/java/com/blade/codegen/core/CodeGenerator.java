@@ -89,6 +89,8 @@ public class CodeGenerator {
         String temResPath = CodeGenerator.class.getResource("/template/src/main/resources").getPath();
 
         PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/pom.xml.html").getPath(), map, rootPath, "pom.xml");
+        PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/package.xml.html").getPath(), map, rootPath, "package.xml");
+        PebbleInfoOp.generatorCode(CodeGenerator.class.getResource("/template/README.md.html").getPath(), map, rootPath, "README.md");
         PebbleInfoOp.generatorCode(temResPath + "/app.properties.html", map, rootPath + "/src/main/resources", "app.properties");
 
         String javaPath = CodeGenerator.class.getResource("/template/src/main/java").getPath();

@@ -1,130 +1,165 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>{{ pkgname }}</groupId>
-	<artifactId>{{ projectname }}</artifactId>
-	<packaging>jar</packaging>
-	<version>0.0.1</version>
-	<name>{{ projectname }}</name>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>{{ pkgname }}</groupId>
+    <artifactId>{{ projectname }}</artifactId>
+    <packaging>jar</packaging>
+    <version>0.0.1</version>
+    <name>{{ projectname }}</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-	
-	<dependencies>
-		<!-- mvc -->
-		<dependency>
-			<groupId>com.bladejava</groupId>
-			<artifactId>blade-mvc</artifactId>
-			<version>2.0.1-alpha1</version>
-		</dependency>
-		<!-- 数据库操作 -->
-		<dependency>
-			<groupId>com.bladejava</groupId>
-			<artifactId>blade-jdbc</artifactId>
-			<version>0.2.0</version>
-		</dependency>
-		<!-- 模板引擎 -->
-		<dependency>
-			<groupId>com.bladejava</groupId>
-			<artifactId>blade-template-jetbrick</artifactId>
-			<version>0.1.0</version>
-		</dependency>
-	</dependencies>
-	
-	<repositories>
-		<repository>
-			<id>oss-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-	<profiles>
-		<profile>
-			<id>prod</id>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/java</directory>
-						<filtering>false</filtering>
-						<excludes>
-							<exclude>**/*.java</exclude>
-						</excludes>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-		<profile>
-			<id>dev</id>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/java</directory>
-						<filtering>false</filtering>
-					</resource>
-					<resource>
-						<directory>src/main/resources</directory>
-						<filtering>false</filtering>
-					</resource>
-					<resource>
-						<directory>src/main/test</directory>
-						<filtering>false</filtering>
-					</resource>
-					<resource>
-						<directory>src/test/resources</directory>
-						<filtering>false</filtering>
-					</resource>
-				</resources>
-			</build>
-		</profile>
-	</profiles>
+    <dependencies>
+        <!-- mvc -->
+        <dependency>
+            <groupId>com.bladejava</groupId>
+            <artifactId>blade-mvc</artifactId>
+            <version>2.0.5-BETA1</version>
+        </dependency>
+        <!-- 数据库操作 -->
+        <dependency>
+            <groupId>com.bladejava</groupId>
+            <artifactId>blade-jdbc</artifactId>
+            <version>0.2.2-RELEASE</version>
+        </dependency>
+        <!-- 模板引擎 -->
+        <dependency>
+            <groupId>com.bladejava</groupId>
+            <artifactId>blade-template-jetbrick</artifactId>
+            <version>0.1.2</version>
+        </dependency>
+        <!-- 数据库驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.43</version>
+        </dependency>
+        <!-- 连接池 -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.18</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<finalName>{{ projectname }}</finalName>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-			<!--mvn clean package assembly:single -Dmaven.test.skip=true-->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<descriptor>assembly.xml</descriptor>
-					</descriptors>
-					<outputDirectory>${project.build.directory}/dist/</outputDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>{{ pkgname }}.Application</mainClass>
-							<classpathPrefix>lib/</classpathPrefix>
-							<addClasspath>true</addClasspath>
-						</manifest>
-						<manifestEntries>
-							<!-- 在Class-Path下添加配置文件的路径 -->
-							<Class-Path>resources/</Class-Path>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <repositories>
+        <repository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>oss-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <filtering>false</filtering>
+                        <excludes>
+                            <exclude>**/*.java</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <filtering>false</filtering>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>false</filtering>
+                    </resource>
+                    <resource>
+                        <directory>src/main/test</directory>
+                        <filtering>false</filtering>
+                    </resource>
+                    <resource>
+                        <directory>src/test/resources</directory>
+                        <filtering>false</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <finalName>{{ projectname }}</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>
+                    1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>package.xml</descriptor>
+                    </descriptors>
+                    <outputDirectory>${project.build.directory}/dist/</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>{{ pkgname }}.Application</mainClass>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>resources/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

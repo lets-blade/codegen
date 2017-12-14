@@ -1,13 +1,20 @@
 package {{ pkgname }}.config;
 
-import com.blade.Blade;
-import com.blade.event.BeanProcessor;
-import com.blade.jdbc.Base;
 import com.blade.mvc.view.template.JetbrickTemplateEngine;
 
+import com.blade.Blade;
+import com.blade.event.BeanProcessor;
+import com.blade.ioc.annotation.Bean;
+import com.blade.jdbc.Base;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
+
 /*
-* web初始化，初始化模板引擎/数据库
-*/
+ * web初始化，初始化模板引擎/数据库
+ */
+@Bean
+@Slf4j
 public class BaseConfig implements BeanProcessor {
 
     @Override
@@ -15,7 +22,20 @@ public class BaseConfig implements BeanProcessor {
         JetbrickTemplateEngine templateEngine = new JetbrickTemplateEngine();
         blade.templateEngine(templateEngine);
 
-        // 数据库，生产环境建议使用连接池代替
-        Base.open("url", "username", "password");
+        try {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(blade.environment().getOrNull("jdbc.url"));
+            config.setUsername(blade.environment().getOrNull("jdbc.username"));
+            config.setPassword(blade.environment().getOrNull("jdbc.password"));
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+            HikariDataSource ds = new HikariDataSource(config);
+            Base.open(ds);
+        } catch (Exception e) {
+            log.error("Connection database fail");
+        }
+
     }
 }
