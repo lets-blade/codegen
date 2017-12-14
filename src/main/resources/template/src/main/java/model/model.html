@@ -6,20 +6,18 @@ import lombok.Data;
 
 import java.util.Date;
 
-//{{ table.tableComment }}
-
 @Data
 @Table(value = "{{ table.tableName }}", pk = "{{ table.pkName }}")
 public class {{ table.className }} extends ActiveRecord {
 
 {% for tempColumn in table.columnList %}
 {% if tempColumn.columnComment != "" %}
-	// {{ tempColumn.columnComment }}
+	/**
+	 * {{ tempColumn.columnComment }}
 
+	 */
 {% endif %}
-
 	private {{ tempColumn.fieldType }} {{ tempColumn.fieldName }};
 
 {% endfor %}
-
 }
