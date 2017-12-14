@@ -109,7 +109,6 @@ public class CodeGenerator {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("table", table);
         PebbleInfoOp.generatorCode(javaPath + "/model/model.html", map, pkgPath + "/model", table.getClassName() + ".java");
-        PebbleInfoOp.generatorCode(javaPath + "/controller/api/controller.html", map, pkgPath + "/controller/api", table.getClassName() + "Controller.java");
         logger.info("表：" + table.getTableName() + "成功");
     }
 
